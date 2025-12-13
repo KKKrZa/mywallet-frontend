@@ -1,0 +1,2423 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "MyWallet API",
+        "description": "Personal finance management system with subscription tracking",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Root",
+                "description": "Root endpoint",
+                "operationId": "root__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "summary": "Health Check",
+                "description": "Health check endpoint",
+                "operationId": "health_check_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "operationId": "register_api_auth_register_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/app__schemas__user__UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "operationId": "login_api_auth_login_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_login_api_auth_login_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/{user_id}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get User",
+                "description": "Get user information by ID\n\nArgs:\n    user_id: User ID\n    db: Database session\n    \nReturns:\n    User information\n    \nRaises:\n    HTTPException: 404 if user not found",
+                "operationId": "get_user_api_users__user_id__get",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/app__routers__users__UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/assets": {
+            "get": {
+                "tags": [
+                    "assets"
+                ],
+                "summary": "List Assets",
+                "description": "List all asset accounts for a user\n\nArgs:\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    List of assets",
+                "operationId": "list_assets_api_assets_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/AssetResponse"
+                                    },
+                                    "type": "array",
+                                    "title": "Response List Assets Api Assets Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "assets"
+                ],
+                "summary": "Create Asset",
+                "description": "Create a new asset account\n\nArgs:\n    asset_data: Asset creation data\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    Created asset",
+                "operationId": "create_asset_api_assets_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssetCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AssetResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/assets/total": {
+            "get": {
+                "tags": [
+                    "assets"
+                ],
+                "summary": "Get Total Assets",
+                "description": "Get total assets for a user\n\nArgs:\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    Total asset value",
+                "operationId": "get_total_assets_api_assets_total_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TotalAssetsResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/assets/{asset_id}": {
+            "get": {
+                "tags": [
+                    "assets"
+                ],
+                "summary": "Get Asset",
+                "description": "Get a specific asset by ID\n\nArgs:\n    asset_id: Asset ID\n    db: Database session\n    \nReturns:\n    Asset information\n    \nRaises:\n    HTTPException: 404 if asset not found",
+                "operationId": "get_asset_api_assets__asset_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "asset_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Asset Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AssetResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "assets"
+                ],
+                "summary": "Update Asset",
+                "description": "Update an asset account\n\nArgs:\n    asset_id: Asset ID\n    asset_data: Asset update data\n    db: Database session\n    \nReturns:\n    Updated asset\n    \nRaises:\n    HTTPException: 404 if asset not found",
+                "operationId": "update_asset_api_assets__asset_id__put",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "asset_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Asset Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssetUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AssetResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "assets"
+                ],
+                "summary": "Delete Asset",
+                "description": "Delete an asset account\n\nArgs:\n    asset_id: Asset ID\n    db: Database session\n    \nRaises:\n    HTTPException: 404 if asset not found",
+                "operationId": "delete_asset_api_assets__asset_id__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "asset_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Asset Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/subscriptions": {
+            "post": {
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "Create Subscription",
+                "description": "Create a new subscription\n\nArgs:\n    subscription_data: Subscription creation data\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    Created subscription",
+                "operationId": "create_subscription_api_subscriptions_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SubscriptionCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SubscriptionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "List Subscriptions",
+                "description": "List all subscriptions for a user with optional status filter\n\nArgs:\n    status: Status filter (optional)\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    List of subscriptions",
+                "operationId": "list_subscriptions_api_subscriptions_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by status (active, paused, canceled)",
+                            "title": "Status"
+                        },
+                        "description": "Filter by status (active, paused, canceled)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SubscriptionResponse"
+                                    },
+                                    "title": "Response List Subscriptions Api Subscriptions Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/subscriptions/{subscription_id}": {
+            "get": {
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "Get Subscription",
+                "description": "Get a specific subscription by ID\n\nArgs:\n    subscription_id: Subscription ID\n    db: Database session\n    \nReturns:\n    Subscription information\n    \nRaises:\n    HTTPException: 404 if subscription not found",
+                "operationId": "get_subscription_api_subscriptions__subscription_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "subscription_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Subscription Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SubscriptionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "Update Subscription",
+                "description": "Update a subscription\n\nArgs:\n    subscription_id: Subscription ID\n    subscription_data: Subscription update data\n    db: Database session\n    \nReturns:\n    Updated subscription\n    \nRaises:\n    HTTPException: 404 if subscription not found",
+                "operationId": "update_subscription_api_subscriptions__subscription_id__put",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "subscription_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Subscription Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SubscriptionUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SubscriptionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "subscriptions"
+                ],
+                "summary": "Delete Subscription",
+                "description": "Delete a subscription\n\nArgs:\n    subscription_id: Subscription ID\n    db: Database session\n    \nRaises:\n    HTTPException: 404 if subscription not found",
+                "operationId": "delete_subscription_api_subscriptions__subscription_id__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "subscription_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Subscription Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transactions": {
+            "post": {
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Create Transaction",
+                "description": "Create a new transaction\n\nArgs:\n    transaction_data: Transaction creation data\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    Created transaction",
+                "operationId": "create_transaction_api_transactions_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TransactionCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "List Transactions",
+                "description": "List all transactions for a user with optional filters\n\nArgs:\n    category: Category filter (optional)\n    subscription_id: Subscription ID filter (optional)\n    start_date: Start date filter (optional)\n    end_date: End date filter (optional)\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    List of transactions",
+                "operationId": "list_transactions_api_transactions_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by category (subscription, food, salary, other)",
+                            "title": "Category"
+                        },
+                        "description": "Filter by category (subscription, food, salary, other)"
+                    },
+                    {
+                        "name": "subscription_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by subscription ID",
+                            "title": "Subscription Id"
+                        },
+                        "description": "Filter by subscription ID"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by start date (YYYY-MM-DD)",
+                            "title": "Start Date"
+                        },
+                        "description": "Filter by start date (YYYY-MM-DD)"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "Filter by end date (YYYY-MM-DD)",
+                            "title": "End Date"
+                        },
+                        "description": "Filter by end date (YYYY-MM-DD)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TransactionResponse"
+                                    },
+                                    "title": "Response List Transactions Api Transactions Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transactions/{transaction_id}": {
+            "get": {
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Get Transaction",
+                "description": "Get a specific transaction by ID\n\nArgs:\n    transaction_id: Transaction ID\n    db: Database session\n    \nReturns:\n    Transaction information\n    \nRaises:\n    HTTPException: 404 if transaction not found",
+                "operationId": "get_transaction_api_transactions__transaction_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "transaction_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Transaction Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransactionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/billing/process": {
+            "post": {
+                "tags": [
+                    "billing"
+                ],
+                "summary": "Process Billing",
+                "description": "Process billing for all due subscriptions on target date\n\nArgs:\n    request: Billing process request with target date\n    current_user: Current authenticated user (admin check could be added here)\n    db: Database session\n    \nReturns:\n    Billing result with success/failure details\n    \nRaises:\n    HTTPException: 422 for business logic errors, 500 for server errors",
+                "operationId": "process_billing_api_billing_process_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BillingProcessRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BillingResultResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/billing/alerts": {
+            "get": {
+                "tags": [
+                    "billing"
+                ],
+                "summary": "Get Billing Alerts",
+                "description": "Get billing alerts for upcoming charges within N days\n\nArgs:\n    days: Number of days to look ahead (default: 7)\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    List of billing alerts sorted by billing date\n    \nRaises:\n    HTTPException: 500 for server errors",
+                "operationId": "get_billing_alerts_api_billing_alerts_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "description": "Number of days to look ahead for billing alerts",
+                            "default": 7,
+                            "title": "Days"
+                        },
+                        "description": "Number of days to look ahead for billing alerts"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/BillingAlertResponse"
+                                    },
+                                    "title": "Response Get Billing Alerts Api Billing Alerts Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/statistics/monthly-spending": {
+            "get": {
+                "tags": [
+                    "statistics"
+                ],
+                "summary": "Get Monthly Spending",
+                "description": "Get total spending for a specific month\n\nArgs:\n    year: Year\n    month: Month (1-12)\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    Monthly spending statistics\n    \nRaises:\n    HTTPException: 422 for validation errors, 500 for server errors",
+                "operationId": "get_monthly_spending_api_statistics_monthly_spending_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "description": "Year",
+                            "title": "Year"
+                        },
+                        "description": "Year"
+                    },
+                    {
+                        "name": "month",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 12,
+                            "minimum": 1,
+                            "description": "Month (1-12)",
+                            "title": "Month"
+                        },
+                        "description": "Month (1-12)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MonthlySpendingResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/statistics/category-spending": {
+            "get": {
+                "tags": [
+                    "statistics"
+                ],
+                "summary": "Get Category Spending",
+                "description": "Get spending grouped by category for a date range\n\nArgs:\n    start_date: Start date\n    end_date: End date\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    Category spending statistics\n    \nRaises:\n    HTTPException: 422 for validation errors, 500 for server errors",
+                "operationId": "get_category_spending_api_statistics_category_spending_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Start date (YYYY-MM-DD)",
+                            "title": "Start Date"
+                        },
+                        "description": "Start date (YYYY-MM-DD)"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "End date (YYYY-MM-DD)",
+                            "title": "End Date"
+                        },
+                        "description": "End date (YYYY-MM-DD)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategorySpendingResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/statistics/subscription-spending": {
+            "get": {
+                "tags": [
+                    "statistics"
+                ],
+                "summary": "Get Subscription Spending",
+                "description": "Get total subscription spending for a specific month\n\nArgs:\n    year: Year\n    month: Month (1-12)\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    Subscription spending statistics\n    \nRaises:\n    HTTPException: 422 for validation errors, 500 for server errors",
+                "operationId": "get_subscription_spending_api_statistics_subscription_spending_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "description": "Year",
+                            "title": "Year"
+                        },
+                        "description": "Year"
+                    },
+                    {
+                        "name": "month",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 12,
+                            "minimum": 1,
+                            "description": "Month (1-12)",
+                            "title": "Month"
+                        },
+                        "description": "Month (1-12)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SubscriptionSpendingResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/statistics/asset-distribution": {
+            "get": {
+                "tags": [
+                    "statistics"
+                ],
+                "summary": "Get Asset Distribution",
+                "description": "Get asset distribution with percentages\n\nArgs:\n    current_user: Current authenticated user\n    db: Database session\n    \nReturns:\n    Asset distribution statistics with percentages\n    \nRaises:\n    HTTPException: 500 for server errors",
+                "operationId": "get_asset_distribution_api_statistics_asset_distribution_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AssetDistributionResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AssetCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "title": "Name",
+                        "description": "Asset name"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/AssetType",
+                        "description": "Asset type"
+                    },
+                    "balance": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string",
+                                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+                            }
+                        ],
+                        "title": "Balance",
+                        "description": "Asset balance"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "minLength": 3,
+                        "title": "Currency",
+                        "description": "Currency code",
+                        "default": "CNY"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "type",
+                    "balance"
+                ],
+                "title": "AssetCreate",
+                "description": "Schema for creating a new asset"
+            },
+            "AssetDistributionItem": {
+                "properties": {
+                    "asset_id": {
+                        "type": "integer",
+                        "title": "Asset Id"
+                    },
+                    "asset_name": {
+                        "type": "string",
+                        "title": "Asset Name"
+                    },
+                    "asset_type": {
+                        "type": "string",
+                        "title": "Asset Type"
+                    },
+                    "balance": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Balance"
+                    },
+                    "percentage": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Percentage"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "asset_id",
+                    "asset_name",
+                    "asset_type",
+                    "balance",
+                    "percentage"
+                ],
+                "title": "AssetDistributionItem",
+                "description": "Schema for asset distribution item"
+            },
+            "AssetDistributionResponse": {
+                "properties": {
+                    "assets": {
+                        "items": {
+                            "$ref": "#/components/schemas/AssetDistributionItem"
+                        },
+                        "type": "array",
+                        "title": "Assets"
+                    },
+                    "total_assets": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Total Assets"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "assets",
+                    "total_assets"
+                ],
+                "title": "AssetDistributionResponse",
+                "description": "Schema for asset distribution statistics"
+            },
+            "AssetResponse": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Type"
+                    },
+                    "balance": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Balance"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "title": "Currency"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "user_id",
+                    "name",
+                    "type",
+                    "balance",
+                    "currency",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "AssetResponse",
+                "description": "Schema for asset response"
+            },
+            "AssetType": {
+                "type": "string",
+                "enum": [
+                    "bank",
+                    "payment",
+                    "cash",
+                    "investment"
+                ],
+                "title": "AssetType",
+                "description": "Asset type enumeration"
+            },
+            "AssetUpdate": {
+                "properties": {
+                    "name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100,
+                                "minLength": 1
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name",
+                        "description": "Asset name"
+                    },
+                    "type": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/AssetType"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "description": "Asset type"
+                    },
+                    "balance": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string",
+                                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Balance",
+                        "description": "Asset balance"
+                    },
+                    "currency": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 10,
+                                "minLength": 3
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Currency",
+                        "description": "Currency code"
+                    }
+                },
+                "type": "object",
+                "title": "AssetUpdate",
+                "description": "Schema for updating an asset"
+            },
+            "BillingAlertResponse": {
+                "properties": {
+                    "subscription_id": {
+                        "type": "integer",
+                        "title": "Subscription Id"
+                    },
+                    "subscription_name": {
+                        "type": "string",
+                        "title": "Subscription Name"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Amount"
+                    },
+                    "billing_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Billing Date"
+                    },
+                    "asset_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Asset Id"
+                    },
+                    "asset_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Asset Name"
+                    },
+                    "days_until_billing": {
+                        "type": "integer",
+                        "title": "Days Until Billing"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "subscription_id",
+                    "subscription_name",
+                    "amount",
+                    "billing_date",
+                    "asset_id",
+                    "asset_name",
+                    "days_until_billing"
+                ],
+                "title": "BillingAlertResponse",
+                "description": "Schema for billing alert"
+            },
+            "BillingCycle": {
+                "type": "string",
+                "enum": [
+                    "weekly",
+                    "monthly",
+                    "yearly"
+                ],
+                "title": "BillingCycle",
+                "description": "Billing cycle enumeration"
+            },
+            "BillingProcessRequest": {
+                "properties": {
+                    "target_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Target Date",
+                        "description": "Target date for billing process"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "target_date"
+                ],
+                "title": "BillingProcessRequest",
+                "description": "Schema for billing process request"
+            },
+            "BillingResultItem": {
+                "properties": {
+                    "subscription_id": {
+                        "type": "integer",
+                        "title": "Subscription Id"
+                    },
+                    "subscription_name": {
+                        "type": "string",
+                        "title": "Subscription Name"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Amount"
+                    },
+                    "asset_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Asset Id"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "title": "Success"
+                    },
+                    "message": {
+                        "type": "string",
+                        "title": "Message"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "subscription_id",
+                    "subscription_name",
+                    "amount",
+                    "asset_id",
+                    "success",
+                    "message"
+                ],
+                "title": "BillingResultItem",
+                "description": "Schema for individual billing result"
+            },
+            "BillingResultResponse": {
+                "properties": {
+                    "processed_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Processed Date"
+                    },
+                    "total_processed": {
+                        "type": "integer",
+                        "title": "Total Processed"
+                    },
+                    "successful": {
+                        "type": "integer",
+                        "title": "Successful"
+                    },
+                    "failed": {
+                        "type": "integer",
+                        "title": "Failed"
+                    },
+                    "results": {
+                        "items": {
+                            "$ref": "#/components/schemas/BillingResultItem"
+                        },
+                        "type": "array",
+                        "title": "Results"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "processed_date",
+                    "total_processed",
+                    "successful",
+                    "failed",
+                    "results"
+                ],
+                "title": "BillingResultResponse",
+                "description": "Schema for billing process result"
+            },
+            "Body_login_api_auth_login_post": {
+                "properties": {
+                    "grant_type": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^password$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Grant Type"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "title": "Password"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "title": "Scope",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Id"
+                    },
+                    "client_secret": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "format": "password",
+                        "title": "Client Secret"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "title": "Body_login_api_auth_login_post"
+            },
+            "CategorySpendingItem": {
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "title": "Category"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Amount"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "category",
+                    "amount"
+                ],
+                "title": "CategorySpendingItem",
+                "description": "Schema for category spending item"
+            },
+            "CategorySpendingResponse": {
+                "properties": {
+                    "categories": {
+                        "items": {
+                            "$ref": "#/components/schemas/CategorySpendingItem"
+                        },
+                        "type": "array",
+                        "title": "Categories"
+                    },
+                    "total": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Total"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "categories",
+                    "total"
+                ],
+                "title": "CategorySpendingResponse",
+                "description": "Schema for category spending statistics"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "MonthlySpendingResponse": {
+                "properties": {
+                    "year": {
+                        "type": "integer",
+                        "title": "Year"
+                    },
+                    "month": {
+                        "type": "integer",
+                        "title": "Month"
+                    },
+                    "total_spending": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Total Spending"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "year",
+                    "month",
+                    "total_spending"
+                ],
+                "title": "MonthlySpendingResponse",
+                "description": "Schema for monthly spending statistics"
+            },
+            "SubscriptionCategory": {
+                "type": "string",
+                "enum": [
+                    "video",
+                    "music",
+                    "software",
+                    "cloud",
+                    "other"
+                ],
+                "title": "SubscriptionCategory",
+                "description": "Subscription category enumeration"
+            },
+            "SubscriptionCreate": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "title": "Name",
+                        "description": "Subscription name"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/SubscriptionCategory",
+                        "description": "Subscription category"
+                    },
+                    "amount": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "exclusiveMinimum": 0.0
+                            },
+                            {
+                                "type": "string",
+                                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+                            }
+                        ],
+                        "title": "Amount",
+                        "description": "Subscription amount"
+                    },
+                    "billing_cycle": {
+                        "$ref": "#/components/schemas/BillingCycle",
+                        "description": "Billing cycle"
+                    },
+                    "next_billing_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Next Billing Date",
+                        "description": "Next billing date"
+                    },
+                    "auto_renew": {
+                        "type": "boolean",
+                        "title": "Auto Renew",
+                        "description": "Auto-renewal enabled",
+                        "default": true
+                    },
+                    "asset_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Asset Id",
+                        "description": "Asset account ID for billing"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/SubscriptionStatus",
+                        "description": "Subscription status",
+                        "default": "active"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "category",
+                    "amount",
+                    "billing_cycle",
+                    "next_billing_date"
+                ],
+                "title": "SubscriptionCreate",
+                "description": "Schema for creating a new subscription"
+            },
+            "SubscriptionResponse": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "category": {
+                        "type": "string",
+                        "title": "Category"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Amount"
+                    },
+                    "billing_cycle": {
+                        "type": "string",
+                        "title": "Billing Cycle"
+                    },
+                    "next_billing_date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Next Billing Date"
+                    },
+                    "auto_renew": {
+                        "type": "boolean",
+                        "title": "Auto Renew"
+                    },
+                    "asset_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Asset Id"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "user_id",
+                    "name",
+                    "category",
+                    "amount",
+                    "billing_cycle",
+                    "next_billing_date",
+                    "auto_renew",
+                    "asset_id",
+                    "status",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "SubscriptionResponse",
+                "description": "Schema for subscription response"
+            },
+            "SubscriptionSpendingResponse": {
+                "properties": {
+                    "year": {
+                        "type": "integer",
+                        "title": "Year"
+                    },
+                    "month": {
+                        "type": "integer",
+                        "title": "Month"
+                    },
+                    "total_subscription_spending": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Total Subscription Spending"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "year",
+                    "month",
+                    "total_subscription_spending"
+                ],
+                "title": "SubscriptionSpendingResponse",
+                "description": "Schema for subscription spending statistics"
+            },
+            "SubscriptionStatus": {
+                "type": "string",
+                "enum": [
+                    "active",
+                    "paused",
+                    "canceled"
+                ],
+                "title": "SubscriptionStatus",
+                "description": "Subscription status enumeration"
+            },
+            "SubscriptionUpdate": {
+                "properties": {
+                    "name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100,
+                                "minLength": 1
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name",
+                        "description": "Subscription name"
+                    },
+                    "category": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/SubscriptionCategory"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "description": "Subscription category"
+                    },
+                    "amount": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "exclusiveMinimum": 0.0
+                            },
+                            {
+                                "type": "string",
+                                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Amount",
+                        "description": "Subscription amount"
+                    },
+                    "billing_cycle": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/BillingCycle"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "description": "Billing cycle"
+                    },
+                    "next_billing_date": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Next Billing Date",
+                        "description": "Next billing date"
+                    },
+                    "auto_renew": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Auto Renew",
+                        "description": "Auto-renewal enabled"
+                    },
+                    "asset_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Asset Id",
+                        "description": "Asset account ID for billing"
+                    },
+                    "status": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/SubscriptionStatus"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "description": "Subscription status"
+                    }
+                },
+                "type": "object",
+                "title": "SubscriptionUpdate",
+                "description": "Schema for updating a subscription"
+            },
+            "Token": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "title": "Token Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "access_token",
+                    "token_type"
+                ],
+                "title": "Token"
+            },
+            "TotalAssetsResponse": {
+                "properties": {
+                    "total": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Total"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "total",
+                    "user_id"
+                ],
+                "title": "TotalAssetsResponse",
+                "description": "Schema for total assets response"
+            },
+            "TransactionCategory": {
+                "type": "string",
+                "enum": [
+                    "subscription",
+                    "food",
+                    "salary",
+                    "other"
+                ],
+                "title": "TransactionCategory",
+                "description": "Transaction category enumeration"
+            },
+            "TransactionCreate": {
+                "properties": {
+                    "type": {
+                        "$ref": "#/components/schemas/TransactionType",
+                        "description": "Transaction type"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/TransactionCategory",
+                        "description": "Transaction category"
+                    },
+                    "amount": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "exclusiveMinimum": 0.0
+                            },
+                            {
+                                "type": "string",
+                                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$"
+                            }
+                        ],
+                        "title": "Amount",
+                        "description": "Transaction amount"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Date",
+                        "description": "Transaction date"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 500
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description",
+                        "description": "Transaction description"
+                    },
+                    "subscription_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Subscription Id",
+                        "description": "Related subscription ID"
+                    },
+                    "asset_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Asset Id",
+                        "description": "Related asset ID"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "type",
+                    "category",
+                    "amount",
+                    "date"
+                ],
+                "title": "TransactionCreate",
+                "description": "Schema for creating a new transaction"
+            },
+            "TransactionResponse": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Type"
+                    },
+                    "category": {
+                        "type": "string",
+                        "title": "Category"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                        "title": "Amount"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Date"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description"
+                    },
+                    "subscription_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Subscription Id"
+                    },
+                    "asset_id": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Asset Id"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "user_id",
+                    "type",
+                    "category",
+                    "amount",
+                    "date",
+                    "description",
+                    "subscription_id",
+                    "asset_id",
+                    "created_at"
+                ],
+                "title": "TransactionResponse",
+                "description": "Schema for transaction response"
+            },
+            "TransactionType": {
+                "type": "string",
+                "enum": [
+                    "income",
+                    "expense"
+                ],
+                "title": "TransactionType",
+                "description": "Transaction type enumeration"
+            },
+            "UserCreate": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "email": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "email"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "title": "UserCreate"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "app__routers__users__UserResponse": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "email": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Email"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "username",
+                    "email",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "UserResponse",
+                "description": "Schema for user response"
+            },
+            "app__schemas__user__UserResponse": {
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "email": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "email"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Email"
+                    },
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "id",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "UserResponse"
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "api/auth/login"
+                    }
+                }
+            }
+        }
+    }
+}
