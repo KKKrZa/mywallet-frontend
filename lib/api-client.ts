@@ -39,8 +39,6 @@ export function getCurrentUser() {
   const payload = parseJwt(token);
   if (!payload) return null;
 
-  // Assuming the payload has 'sub' as username or 'id'
-  // Adjust based on your actual JWT structure
   return {
     username: payload.sub || payload.username || "User",
     id: payload.id,
@@ -65,7 +63,6 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
   const token = getToken();
   const authHeader = token ? { "Authorization": `Bearer ${token}` } : {};
 
-  // Handle form data specifically for login
   const isFormData = body instanceof URLSearchParams;
   const contentTypeHeader = isFormData 
     ? { "Content-Type": "application/x-www-form-urlencoded" }
@@ -85,7 +82,6 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
     const response = await fetch(url.toString(), config);
 
     if (response.status === 401) {
-      // Unauthorized, redirect to login if we are not already there
       if (typeof window !== "undefined" && !window.location.pathname.includes("/login") && !window.location.pathname.includes("/register")) {
         removeToken();
         window.location.href = "/login";

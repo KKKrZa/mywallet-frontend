@@ -25,10 +25,7 @@ export function RecentTransactions() {
     async function fetchData() {
       try {
         const res = await transactionsApi.list({
-          // You might want to add pagination or limit here if the API supported it
-          // For now we'll just slice the result
         })
-        // Sort by date descending and take top 5
         const sorted = res.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5)
         setTransactions(sorted)
       } catch (error) {
